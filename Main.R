@@ -4,6 +4,8 @@ ham_filenames <- list.files("./corpus/easy_ham", full.names = TRUE)
 
 library(readr)
 library(stringr)
+library(text2vec)
+
 
 spamassassin_df = data.frame(
   id = numeric(), mail_content = character(), is_spam = logical(), stringsAsFactors = FALSE
@@ -15,4 +17,3 @@ for (i in 1:length(ham_filenames)){
   spamassassin_df[i, ] <- c(i, mail_content, FALSE)
 }
 
-library(text2vec)
