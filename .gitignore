@@ -1,2 +1,8 @@
 corpus/
 test/
+z_env/*
+z_env
+email_parser/__pycache__/*
+
+email_parser/encoder.py
+email_parser/text_preprocessing.py
