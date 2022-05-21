@@ -69,7 +69,12 @@ EmmailPreprocessing.downloadNLTKPackages()
 ep = EmailParser()
 bodys = ep.readEmailsBody(confg["spam_dir"], max_files = 1 )
 
-print(bodys)
+print(len(bodys))
+lemms = []
+for b in bodys:
+    lemms.append(ep.preprocess(b))
+    
+print(lemms)
 
 
 

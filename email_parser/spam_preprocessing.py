@@ -20,8 +20,9 @@ class EmmailPreprocessing:
         nltk.download('averaged_perceptron_tagger')
 
     def cleanText(self, text):
+        tmp = text
         #remove user reference
-        #tmp = re.sub("@[A-Za-z0-9_]+","", text)
+        #tmp = re.sub("@[A-Za-z0-9_]+","", tmp)
         #remove hashhtags
         #tmp = re.sub("#[A-Za-z0-9_]+","", tmp)
         #remove urls

@@ -6,3 +6,4 @@ email_parser/__pycache__/*
 
 email_parser/encoder.py
 email_parser/text_preprocessing.py
+email_parser/parser_conf.json
