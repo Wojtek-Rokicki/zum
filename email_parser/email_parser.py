@@ -11,8 +11,11 @@ from spam_preprocessing import EmmailPreprocessing
 from gensim.models import KeyedVectors
 from gensim.scripts.glove2word2vec import glove2word2vec
 from gensim.test.utils import datapath, get_tmpfile
-from sys import exit
 import spacy
+import numpy as np 
+import csv
+
+
 
 class EmailParser(EmmailPreprocessing):
     def __init__(self, source_word_vec_file = "", use_spacy = False) -> None:
@@ -80,7 +83,8 @@ class EmailParser(EmmailPreprocessing):
         vec = []
         for token in body:
             vec.append(self.w2v_model(token).vector)
-        return vec
+        vec_mean  = np.nanmean(vec, axis=0)
+        return vec_mean
 
     @classmethod
     def glove2w2v(cls, source_file, out_file):
@@ -98,22 +102,34 @@ with open("email_parser\parser_conf.json", "r", encoding="utf-8") as f:
      
 #SPAM_DIR = 'C:\Projekty\ZUM\zum\corpus\spam\spam\\'
 #SPAM_BODY_DIR = 'C:\Projekty\ZUM\zum\corpus\spam\spam_body\\'
-EmmailPreprocessing.downloadNLTKPackages()
+
+'''
+uncoment following when run for the first time
+'''
+#EmmailPreprocessing.downloadNLTKPackages()
 
 #EmailParser.glove2w2v(config["w2v_model"], config["w2v_model"] + "_w2v")
 
 ep = EmailParser(config["w2v_model"], use_spacy=True)
-bodys = ep.readEmailsBody(config["spam_dir"], max_files = 1 )
-
+bodys = ep.readEmailsBody(config["spam_dir"])
 print(len(bodys))
+class_value = config["class"]
 emmbedings = []
-for b in bodys:
-    lemm = ep.preprocess(b)
-    e = ep.buildEmmbedding(lemm)
-    emmbedings.append(e)
+for i, b in tqdm(enumerate(bodys)):
+    try:
+        lemm = ep.preprocess(b)
+        e = ep.buildEmmbedding(lemm)
+        if len(e):
+            e = np.append(e, [class_value], axis=0)
+            emmbedings.append(e)
+    except Exception as e:
+        print(f"[{i}]: {e}") 
+        continue
 
-for e in emmbedings:
-    print(len(e))
+with open('easy_ham_embbedings_300.csv', 'a') as f:
+    csvwriter = csv.writer(f)
+    csvwriter.writerows(emmbedings)
+
 
 
 
