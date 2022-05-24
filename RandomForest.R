@@ -1,11 +1,5 @@
-#library(e1071)
-#https://rdrr.io/cran/naivebayes/man/gaussian_naive_bayes.html
-#load dependencies
-library(naivebayes)
-library(dplyr)
-library(caret)
-library(Matrix)
-library(e1071)
+
+library(randomForest)
 
 #load datasets
 spam_embbedings_300 <- read.csv("spam_embbedings_300.csv", header=FALSE, encoding = "UTF-8")
@@ -41,41 +35,13 @@ x_test = testing[1:300]
 y_test = testing$class
 
 #---------------------------------------------
-# BAYES 
+# Random Forest 
 #---------------------------------------------
 
-#train model
-gnb <- gaussian_naive_bayes(x = data.matrix(x_train), y = y_train)
-summary(gnb)
+model_rf <- randomForest(x_train, factor(y_train), importance=TRUE, proximity=TRUE) 
+pr_forest = predict(model_rf, newdata=x_test, type="response")
 
-
-#test on training data
-pr_train = predict(gnb, newdata = data.matrix(x_train), type = "class")
-table(y_train, pr_train)
-
-#test on testing data
-pr_test = predict(gnb, newdata = data.matrix(x_test), type = "class")
-table(y_test, pr_test)
-
-
-#---------------------------------------------
-# SVN 
-#---------------------------------------------
-
-
-model_svm <- svm(x_train, factor(y_train), type="C-classification")
-summary(model_svm)
-
-
-pr_svm = predict(model_svm, x_test)
-table(y_test, pr_svm)
-
-
-
-
-
-
-
+table(y_test, pr_forest)
 
 
 
