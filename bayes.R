@@ -29,6 +29,7 @@ cm = as.matrix(table(y_test, pr_test))
 calculateMetrics(cm)
 
 
+#ROC - nie wiem ocb, ale nie dziala 🙃🙃🙃
 pr_prob_tmp <- as.data.frame(pr_test_prob) 
 pr_prob = pr_prob_tmp$spam
 
@@ -41,7 +42,7 @@ pred <- prediction(pr_prob, pr_labels_num)
 
 perf <- performance(pred, "tpr", "fpr")
 
-plot(perf,avg="threshold")
+plot(perf, colorize=TRUE,lwd= 5)
  
 
 
