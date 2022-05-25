@@ -1,3 +1,4 @@
+library(dplyr)
 #load datasets
 spam_embbedings_300 <- read.csv("spam_embbedings_300.csv", header=FALSE, encoding = "UTF-8")
 names(spam_embbedings_300)[length(names(spam_embbedings_300))]<-"class" 
