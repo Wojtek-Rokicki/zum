@@ -4,6 +4,7 @@
 library(naivebayes)
 library(dplyr)
 library(caret)
+library (ROCR);
 
 source(file="load_datasets.r")
 
@@ -26,7 +27,7 @@ table(y_test, pr_test)
 
 
 
-
+#pred <- prediction(pr_test, y_test);
 
 
 
