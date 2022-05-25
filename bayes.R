@@ -4,8 +4,6 @@
 library(naivebayes)
 library(dplyr)
 library(caret)
-library(Matrix)
-library(e1071)
 
 source(file="load_datasets.r")
 
