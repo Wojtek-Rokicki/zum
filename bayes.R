@@ -2,11 +2,11 @@
 #https://rdrr.io/cran/naivebayes/man/gaussian_naive_bayes.html
 #load dependencies
 library(naivebayes)
-library(dplyr)
 library(caret)
-library (ROCR);
+library (ROCR)
 
 source(file="load_datasets.r")
+source(file="metrics.r")
 
 #---------------------------------------------
 # BAYES 
@@ -23,11 +23,13 @@ table(y_train, pr_train)
 
 #test on testing data
 pr_test = predict(gnb, newdata = data.matrix(x_test), type = "class")
-table(y_test, pr_test)
+cm = as.matrix(table(y_test, pr_test))
+
+
+calculateMetrics(cm)
 
 
 
-#pred <- prediction(pr_test, y_test);
 
 
 
