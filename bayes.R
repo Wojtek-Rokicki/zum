@@ -23,13 +23,26 @@ table(y_train, pr_train)
 
 #test on testing data
 pr_test = predict(gnb, newdata = data.matrix(x_test), type = "class")
+pr_test_prob = predict(gnb, newdata = data.matrix(x_test), type = "prob")
+
 cm = as.matrix(table(y_test, pr_test))
-
-
 calculateMetrics(cm)
 
 
+pr_prob_tmp <- as.data.frame(pr_test_prob) 
+pr_prob = pr_prob_tmp$spam
 
+pr_labels = as.character(pr_test)
+pr_labels_num = as.numeric(sapply(pr_labels, function(x) if(x == "ham") return(0) else return(1) ))
+
+
+
+pred <- prediction(pr_prob, pr_labels_num)
+
+perf <- performance(pred, "tpr", "fpr")
+
+plot(perf,avg="threshold")
+ 
 
 
 
