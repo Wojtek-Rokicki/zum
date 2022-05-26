@@ -26,7 +26,7 @@ model_svn <- function(x_train, y_train, kernel_arg, degree_arg=3, gamma_arg=1, c
 #https://medium.com/@myselfaman12345/c-and-gamma-in-svm-e6cee48626be
 kernels = list("linear", "polynomial", "radial", "sigmoid")
 costs = list(0.001, 0.01, 0.1, 1, 10, 100) # (all)
-degrees = list(2, 3, 4, 5, 6) # max 6  (polynominal)
+degrees = list(2, 3, 4, 5, 6) # max 6  (polynominal) 
 gammas = list(0.001, 0.01, 0.1, 1, 10, 100) # (radial)
 #------------------
 #------linear------

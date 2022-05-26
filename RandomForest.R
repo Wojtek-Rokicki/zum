@@ -26,7 +26,7 @@ model_forest <- function(x_train, y_train, ntree_arg) {
 #  ntree  -> liczba losowanych atrybutów branych pod uwagê przy podziale w wêŸle
 #             default sqrt(p) p - liczba atrybutów
 
-tress_num = list(50, 100, 200, 300, 400, 500)
+tress_num = list(50, 100, 200, 500)
 
 
 for (val in tress_num){

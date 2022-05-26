@@ -29,16 +29,16 @@ cm = as.matrix(table(y_test, pr_test))
 calculateMetrics(cm)
 
 
-#ROC - nie wiem ocb, ale nie dziala 🙃🙃🙃
+#ROC 
 pr_prob_tmp <- as.data.frame(pr_test_prob) 
 pr_prob = pr_prob_tmp$spam
 
-pr_labels = as.character(pr_test)
-pr_labels_num = as.numeric(sapply(pr_labels, function(x) if(x == "ham") return(0) else return(1) ))
+pr_labels = as.character(y_test)
+#pr_labels_num = as.numeric(sapply(pr_labels, function(x) if(x == "ham") return(0) else return(1) ))
 
 
 
-pred <- prediction(pr_prob, pr_labels_num)
+pred <- prediction(pr_prob, y_test)
 
 perf <- performance(pred, "tpr", "fpr")
 
