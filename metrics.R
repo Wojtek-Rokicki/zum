@@ -34,3 +34,30 @@ calculateMetrics <-function(cm){
   print("recall: ")
   print(recall)
 }
+
+#ROC
+getROC <-function(probs, labels){
+  #pr_prob_tmp <- as.data.frame(probs) 
+  #pr_prob = pr_prob_tmp$spam
+  
+  #pr_labels = as.character(y_test)
+  #pr_labels_num = as.numeric(sapply(pr_labels, function(x) if(x == "ham") return(0) else return(1) ))
+  
+  pred <- prediction(pr_prob, labels)
+  perf <- performance(pred, "tpr", "fpr")
+  plot(perf,lwd= 4)
+  
+  auc <- performance(pred, measure = "auc")
+  auc <- auc@y.values[[1]]
+  print("AUC:")
+  print(auc)
+  
+}
+
+
+
+
+
+
+
+

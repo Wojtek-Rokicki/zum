@@ -12,6 +12,7 @@ source(file="metrics.r")
 # BAYES 
 #---------------------------------------------
 
+
 #train model
 gnb <- gaussian_naive_bayes(x = data.matrix(x_train), y = y_train)
 summary(gnb)
@@ -31,19 +32,16 @@ calculateMetrics(cm)
 
 #ROC 
 pr_prob_tmp <- as.data.frame(pr_test_prob) 
-pr_prob = pr_prob_tmp$spam
-
-pr_labels = as.character(y_test)
-#pr_labels_num = as.numeric(sapply(pr_labels, function(x) if(x == "ham") return(0) else return(1) ))
+pr_prob_spam = pr_prob_tmp$spam
+getROC(pr_prob_spam, y_test)
 
 
 
-pred <- prediction(pr_prob, y_test)
 
-perf <- performance(pred, "tpr", "fpr")
 
-plot(perf, colorize=TRUE,lwd= 5)
- 
+
+
+
 
 
 
