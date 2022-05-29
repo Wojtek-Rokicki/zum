@@ -1,5 +1,7 @@
+library(caret)
 library(dplyr)
 #load datasets
+#-------------embbedings
 spam_embbedings_300 <- read.csv("spam_embbedings_300.csv", header=FALSE, encoding = "UTF-8")
 names(spam_embbedings_300)[length(names(spam_embbedings_300))]<-"class" 
 
@@ -31,3 +33,7 @@ y_train = training$class
 
 x_test = testing[1:300]
 y_test = testing$class
+
+
+
+
