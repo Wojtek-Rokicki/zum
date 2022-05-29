@@ -65,10 +65,22 @@ class EmailParser(EmmailPreprocessing):
 
         return bodys
 
-    def buildFreqVec(self, body):
+    def buildFreqVec(self, lemms, ngram_dict):
+        vec = []
+        np_lemms = np.array(lemms)
+        for ngram in ngram_dict.keys():
+            c = np.count_nonzero(np_lemms == ngram)
+            vec.append(c)
+            #vec.append(self.countNgram(lemms, ngram))
+        return vec
 
+    def countNgram(self, lemms, ngram):
+        cnt = 0
+        for l in lemms:
+            if l == ngram: cnt+=1
         
-        pass
+        return cnt
+
     
     def buildEmmbedding(self, body):
         if self.use_spacy:
@@ -126,6 +138,7 @@ with open("email_parser\parser_conf.json", "r", encoding="utf-8") as f:
 #mode = "BUILD_EMMBEDINGS" 
 #mode = "BUILD_NGRAMS" 
 mode = "BUILD_FREQ_VEC" 
+#mode = "ELSE"
 
 
 if mode == "BUILD_EMMBEDINGS":
@@ -165,13 +178,49 @@ elif mode == "BUILD_NGRAMS":
     fb.saveDict()
     
 elif mode == "BUILD_FREQ_VEC":
+    ep, class_value, bodys = initParser(config)
     fb_uni = FreqBuilder("uni_grams_dict_fin.json")
     fb_bi  = FreqBuilder("bi_grams_dict_fin.json")
+    uni_dict = fb_uni.getDict()
+    bi_dict  = fb_bi.getDict()
     #fb.dumpSortedDict(file_out = "bi_grams_sorted.txt")
     #fb.dumpSortedDict(file_out = "uni_grams_sorted.txt")
-    
-    
-    
+    uni_vectors = []
+    bi_vectors = []
+    for i, b in tqdm(enumerate(bodys)):
+        try:
+            lemm = ep.preprocess(b)
+            #vec_uni = ep.buildFreqVec(lemm, uni_dict)
+            vec_bi = ep.buildFreqVec(lemm, bi_dict)
+
+            #vec_uni.append(class_value)
+            vec_bi.append(class_value)
+
+            #uni_vectors.append(vec_uni)
+            bi_vectors.append(vec_bi)
+        except Exception as e:
+            print(f"[{i}]: {e}") 
+            continue
+
+    #with open('spam_freq_vec_uni.csv', 'a') as f:
+    #    csvwriter = csv.writer(f)
+    #    csvwriter.writerows(uni_vectors)
+
+    with open('spam_freq_vec_bi.csv', 'a') as f:
+        csvwriter = csv.writer(f)
+        csvwriter.writerows(bi_vectors)
+
+
+#testing and debuging
+else:
+    ep = EmailParser(config["w2v_model"], use_spacy=True)
+    fb_uni = FreqBuilder("uni_grams_dict_fin.json")
+    uni_dict = fb_uni.getDict()
+    lemms = ['like','people','message','go', 'go']
+    vec = ep.buildFreqVec(lemms, uni_dict)
+    for i, v in enumerate(vec):
+        if v != 0:
+            print(f"[{i}] {v}")
     
 
     

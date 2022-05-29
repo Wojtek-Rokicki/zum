@@ -46,6 +46,9 @@ class FreqBuilder():
             for s in sort:
                 f.write(f"{s}\n")
                 
+    def getDict(self):
+        return self.__ngrams_dict
+        
 
     def fitToDict(self, ngrams:list):
         for token in ngrams:
