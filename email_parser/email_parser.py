@@ -6,15 +6,16 @@ from email import policy
 from os import listdir
 from os.path import isfile, join
 import traceback
+import spacy
+import numpy as np 
+import csv
+import os
 from spam_preprocessing import EmmailPreprocessing
 #from gensim.models import Word2Vec
 #from gensim.models import KeyedVectors
 #from gensim.scripts.glove2word2vec import glove2word2vec
 #from gensim.test.utils import datapath, get_tmpfile
-import spacy
-import numpy as np 
-import csv
-import os
+from freq_builder import FreqBuilder
 
 
 class EmailParser(EmmailPreprocessing):
@@ -143,23 +144,20 @@ if mode == "BUILD_EMMBEDINGS":
 
 #build freq vectors
 elif mode == "BUILD_NGRAMS":
-    freq_vectors = []
-    #for i, b in tqdm(enumerate(bodys)):
-    for i, b in enumerate(bodys):
+    fb = FreqBuilder("uni_grams_dict.json")
+    for i, b in tqdm(enumerate(bodys)):
         try:
             lemm = ep.preprocess(b)
-            e = ep.generate_N_grams(lemm)
-            print(e)
-            if len(e):
-                e = np.append(e, [class_value], axis=0)
-                freq_vectors.append(e)
+            e = ep.generate_N_grams(lemm, ngram=1)
+            fb.fitToDict(e)
         except Exception as e:
             print(f"[{i}]: {e}") 
             continue
+        if i%30 == 0:
+            fb.saveDict()
+            
+    fb.saveDict()
 
-    #with open("bi_grams_hard_ham.csv", 'a') as f:
-    #    csvwriter = csv.writer(f)
-    #    csvwriter.writerows(freq_vectors)
 
 
 
