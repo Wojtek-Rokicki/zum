@@ -26,7 +26,7 @@ class EmmailPreprocessing:
         #remove hashhtags
         #tmp = re.sub("#[A-Za-z0-9_]+","", tmp)
         #remove urls
-        #tmp = re.sub(r"http\S+", "", tmp)
+        tmp = re.sub(r"http\S+", "", tmp)
         #tmp = re.sub(r"www.\S+", "", tmp)
         #split words connected with "-" wchich is needed for further processing
         tmp = re.sub(r"-", " ", tmp)

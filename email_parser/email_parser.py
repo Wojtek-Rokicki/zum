@@ -8,17 +8,17 @@ from os.path import isfile, join
 import traceback
 from spam_preprocessing import EmmailPreprocessing
 #from gensim.models import Word2Vec
-from gensim.models import KeyedVectors
-from gensim.scripts.glove2word2vec import glove2word2vec
-from gensim.test.utils import datapath, get_tmpfile
+#from gensim.models import KeyedVectors
+#from gensim.scripts.glove2word2vec import glove2word2vec
+#from gensim.test.utils import datapath, get_tmpfile
 import spacy
 import numpy as np 
 import csv
-
+import os
 
 
 class EmailParser(EmmailPreprocessing):
-    def __init__(self, source_word_vec_file = "", use_spacy = False) -> None:
+    def __init__(self, source_word_vec_file = "", use_spacy = True) -> None:
         super().__init__()
         #self.w2v_model = KeyedVectors.load_word2vec_format(
             # 'data/GoogleGoogleNews-vectors-negative300.bin', binary=True)
@@ -26,7 +26,8 @@ class EmailParser(EmmailPreprocessing):
         if self.use_spacy:
             self.w2v_model = spacy.load('en_core_web_md')
         else:
-            self.w2v_model = KeyedVectors.load_word2vec_format(source_word_vec_file, binary=False)
+            #self.w2v_model = KeyedVectors.load_word2vec_format(source_word_vec_file, binary=False)
+            pass
 
 
     def getEmailBody(self, filename):
@@ -64,6 +65,8 @@ class EmailParser(EmmailPreprocessing):
         return bodys
 
     def buildFreqVec(self, body):
+
+        
         pass
     
     def buildEmmbedding(self, body):
@@ -86,51 +89,77 @@ class EmailParser(EmmailPreprocessing):
         vec_mean  = np.nanmean(vec, axis=0)
         return vec_mean
 
-    @classmethod
-    def glove2w2v(cls, source_file, out_file):
-        glove_file = datapath(source_file)
-        tmp_file = get_tmpfile(out_file)
-        _ = glove2word2vec(glove_file, tmp_file)
 
-# r = getEmailBody("sample2")
-# dumpToFile("out.txt", r)
-import os
+    def generate_N_grams(self, words, ngram=2):
+        temp=zip(*[words[i:] for i in range(0,ngram)])
+        res=[' '.join(ngram) for ngram in temp]
+        return res
+
+
+    #@classmethod
+    #def glove2w2v(cls, source_file, out_file):
+    #    glove_file = datapath(source_file)
+    #    tmp_file = get_tmpfile(out_file)
+    #    _ = glove2word2vec(glove_file, tmp_file)
+        
+
+
 cwd = os.getcwd()
 print(cwd)
 with open("email_parser\parser_conf.json", "r", encoding="utf-8") as f:
     config = json.loads(f.read())
-     
-#SPAM_DIR = 'C:\Projekty\ZUM\zum\corpus\spam\spam\\'
-#SPAM_BODY_DIR = 'C:\Projekty\ZUM\zum\corpus\spam\spam_body\\'
 
-'''
-uncoment following when run for the first time
-'''
+
+#uncoment following when run for the first time
 #EmmailPreprocessing.downloadNLTKPackages()
 
-#EmailParser.glove2w2v(config["w2v_model"], config["w2v_model"] + "_w2v")
+
+#mode = "BUILD_EMMBEDINGS" 
+mode = "BUILD_NGRAMS" 
+#mode = "BUILD_FREQ_VEC" 
 
 ep = EmailParser(config["w2v_model"], use_spacy=True)
 bodys = ep.readEmailsBody(config["spam_dir"])
 print(len(bodys))
 class_value = config["class"]
-emmbedings = []
-for i, b in tqdm(enumerate(bodys)):
-    try:
-        lemm = ep.preprocess(b)
-        e = ep.buildEmmbedding(lemm)
-        if len(e):
-            e = np.append(e, [class_value], axis=0)
-            emmbedings.append(e)
-    except Exception as e:
-        print(f"[{i}]: {e}") 
-        continue
 
-with open('easy_ham_embbedings_300.csv', 'a') as f:
-    csvwriter = csv.writer(f)
-    csvwriter.writerows(emmbedings)
+if mode == "BUILD_EMMBEDINGS":
+    emmbedings = []
+    for i, b in tqdm(enumerate(bodys)):
+        try:
+            lemm = ep.preprocess(b)
+            e = ep.buildEmmbedding(lemm)
+            if len(e):
+                e = np.append(e, [class_value], axis=0)
+                emmbedings.append(e)
+        except Exception as e:
+            print(f"[{i}]: {e}") 
+            continue
+
+    with open('easy_ham_embbedings_300.csv', 'a') as f:
+        csvwriter = csv.writer(f)
+        csvwriter.writerows(emmbedings)
 
 
+#build freq vectors
+elif mode == "BUILD_NGRAMS":
+    freq_vectors = []
+    #for i, b in tqdm(enumerate(bodys)):
+    for i, b in enumerate(bodys):
+        try:
+            lemm = ep.preprocess(b)
+            e = ep.generate_N_grams(lemm)
+            print(e)
+            if len(e):
+                e = np.append(e, [class_value], axis=0)
+                freq_vectors.append(e)
+        except Exception as e:
+            print(f"[{i}]: {e}") 
+            continue
+
+    #with open("bi_grams_hard_ham.csv", 'a') as f:
+    #    csvwriter = csv.writer(f)
+    #    csvwriter.writerows(freq_vectors)
 
 
 
