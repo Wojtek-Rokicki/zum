@@ -40,6 +40,13 @@ class FreqBuilder():
         os.rename(tmp_filename, self.dict_filename)
 
 
+    def dumpSortedDict(self, file_out):
+        with open(file_out, "w", encoding='utf-8') as f:
+            sort = sorted( ((v,k) for k,v in self.__ngrams_dict.items()), reverse=True)
+            for s in sort:
+                f.write(f"{s}\n")
+                
+
     def fitToDict(self, ngrams:list):
         for token in ngrams:
             if token not in self.__ngrams_dict:

@@ -105,6 +105,15 @@ class EmailParser(EmmailPreprocessing):
         
 
 
+def initParser(config):
+    ep = EmailParser(config["w2v_model"], use_spacy=True)
+    bodys = ep.readEmailsBody(config["spam_dir"])
+    print(len(bodys))
+    class_value = config["class"]
+    
+    return ep, class_value, bodys
+
+
 cwd = os.getcwd()
 print(cwd)
 with open("email_parser\parser_conf.json", "r", encoding="utf-8") as f:
@@ -114,17 +123,13 @@ with open("email_parser\parser_conf.json", "r", encoding="utf-8") as f:
 #uncoment following when run for the first time
 #EmmailPreprocessing.downloadNLTKPackages()
 
-
 #mode = "BUILD_EMMBEDINGS" 
-mode = "BUILD_NGRAMS" 
-#mode = "BUILD_FREQ_VEC" 
+#mode = "BUILD_NGRAMS" 
+mode = "BUILD_FREQ_VEC" 
 
-ep = EmailParser(config["w2v_model"], use_spacy=True)
-bodys = ep.readEmailsBody(config["spam_dir"])
-print(len(bodys))
-class_value = config["class"]
 
 if mode == "BUILD_EMMBEDINGS":
+    ep, class_value, bodys = initParser(config)
     emmbedings = []
     for i, b in tqdm(enumerate(bodys)):
         try:
@@ -144,6 +149,7 @@ if mode == "BUILD_EMMBEDINGS":
 
 #build freq vectors
 elif mode == "BUILD_NGRAMS":
+    ep, class_value, bodys = initParser(config)
     fb = FreqBuilder("uni_grams_dict.json")
     for i, b in tqdm(enumerate(bodys)):
         try:
@@ -157,8 +163,18 @@ elif mode == "BUILD_NGRAMS":
             fb.saveDict()
             
     fb.saveDict()
+    
+elif mode == "BUILD_FREQ_VEC":
+    fb_uni = FreqBuilder("uni_grams_dict_fin.json")
+    fb_bi  = FreqBuilder("bi_grams_dict_fin.json")
+    #fb.dumpSortedDict(file_out = "bi_grams_sorted.txt")
+    #fb.dumpSortedDict(file_out = "uni_grams_sorted.txt")
+    
+    
+    
+    
 
-
+    
 
 
 
