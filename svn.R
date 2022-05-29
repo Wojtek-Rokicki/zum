@@ -1,6 +1,7 @@
 #install.packages ('e1071', dependencies = TRUE)
 library(e1071)
 source(file="load_datasets.r")
+source(file="metrics.r")
 
 #---------------------------------------------
 # SVN 
@@ -21,12 +22,34 @@ model_svn <- function(x_train, y_train, kernel_arg, degree_arg=3, gamma_arg=1, c
   t = table(y_test, pr_svm)
   print(t)
   print("-------------")
+  
+    
+  svm_model_probs <- svm(
+    x_train, factor(y_train), 
+    type="C-classification", 
+    kernel=kernel_arg,
+    degree = degree_arg,
+    gamma = gamma_arg,
+    cost=cost_arg,
+    probability = TRUE
+  )
+  pr_svm_probs = predict(svm_model_probs, x_test, probability=TRUE)
+  
+  return(pr_svm_probs)
 }
+
+pr_tmp_ret = model_svn(x_train,y_train, kernel_arg="linear")
+#ROC
+pr_tmp = attr(pr_tmp_ret, "probabilities")
+pr_prob_tmp <- as.data.frame(pr_tmp) 
+pr_prob_spam = pr_prob_tmp$spam
+getROC(pr_prob_spam, y_test)
+
 
 #https://medium.com/@myselfaman12345/c-and-gamma-in-svm-e6cee48626be
 kernels = list("linear", "polynomial", "radial", "sigmoid")
 costs = list(0.001, 0.01, 0.1, 1, 10, 100) # (all)
-degrees = list(2, 3, 4, 5, 6) # max 6  (polynominal) #mo¿na pomin¹æ
+degrees = list(2, 3, 4, 5, 6) # max 6  (polynominal) #mozna pominac
 gammas = list(0.001, 0.01, 0.1, 1, 10, 100) # (radial)
 #------------------
 #------linear------

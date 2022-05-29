@@ -36,14 +36,14 @@ calculateMetrics <-function(cm){
 }
 
 #ROC
-getROC <-function(probs, labels){
+getROC <-function(pr_probs, labels){
   #pr_prob_tmp <- as.data.frame(probs) 
   #pr_prob = pr_prob_tmp$spam
   
   #pr_labels = as.character(y_test)
   #pr_labels_num = as.numeric(sapply(pr_labels, function(x) if(x == "ham") return(0) else return(1) ))
   
-  pred <- prediction(pr_prob, labels)
+  pred <- prediction(pr_probs, labels)
   perf <- performance(pred, "tpr", "fpr")
   plot(perf,lwd= 4)
   
