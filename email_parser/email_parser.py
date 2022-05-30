@@ -133,13 +133,13 @@ with open("email_parser\parser_conf.json", "r", encoding="utf-8") as f:
 
 
 #uncoment following when run for the first time
-#EmmailPreprocessing.downloadNLTKPackages()
+EmmailPreprocessing.downloadNLTKPackages()
 
 #mode = "BUILD_EMMBEDINGS" 
 #mode = "BUILD_NGRAMS" 
-mode = "BUILD_FREQ_VEC" 
+#mode = "BUILD_FREQ_VEC" 
 #mode = "ELSE"
-
+mode = config["mode"]
 
 if mode == "BUILD_EMMBEDINGS":
     ep, class_value, bodys = initParser(config)
@@ -163,10 +163,10 @@ if mode == "BUILD_EMMBEDINGS":
 #build freq vectors
 elif mode == "BUILD_NGRAMS":
     ep, class_value, bodys = initParser(config)
-    fb = FreqBuilder("uni_grams_dict.json")
+    fb = FreqBuilder(config["ngram_dict_outfile"])
     for i, b in tqdm(enumerate(bodys)):
         try:
-            lemm = ep.preprocess(b)
+            lemm = ep.preprocess(b, match_nltk_corpus=True)
             e = ep.generate_N_grams(lemm, ngram=1)
             fb.fitToDict(e)
         except Exception as e:
@@ -176,7 +176,8 @@ elif mode == "BUILD_NGRAMS":
             fb.saveDict()
             
     fb.saveDict()
-    
+
+
 elif mode == "BUILD_FREQ_VEC":
     ep, class_value, bodys = initParser(config)
     fb_uni = FreqBuilder("uni_grams_dict_fin.json")
@@ -213,14 +214,10 @@ elif mode == "BUILD_FREQ_VEC":
 
 #testing and debuging
 else:
-    ep = EmailParser(config["w2v_model"], use_spacy=True)
-    fb_uni = FreqBuilder("uni_grams_dict_fin.json")
-    uni_dict = fb_uni.getDict()
-    lemms = ['like','people','message','go', 'go']
-    vec = ep.buildFreqVec(lemms, uni_dict)
-    for i, v in enumerate(vec):
-        if v != 0:
-            print(f"[{i}] {v}")
+    fb = FreqBuilder("uni_grams_dict_all_en.json")
+    fb.dumpSortedDict(file_out = "uni_grams_dict_all_en_sorted.txt")
+
+
     
 
     
