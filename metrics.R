@@ -1,4 +1,4 @@
-#library (ROCR)
+library (ROCR)
 #
 #get 
 #y1 <- factor(c("spam","spam","spam","ham"))
