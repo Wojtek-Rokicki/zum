@@ -119,9 +119,14 @@ class EmailParser(EmmailPreprocessing):
 
 def initParser(config):
     ep = EmailParser(config["w2v_model"], use_spacy=True)
-    bodys = ep.readEmailsBody(config["spam_dir"])
-    print(len(bodys))
     class_value = config["class"]
+    if class_value == "spam":
+        bodys = ep.readEmailsBody(config["spam_dir"])
+    elif class_value == "ham":
+        bodys = ep.readEmailsBody(config["ham_dir"])
+    else:
+        raise Exception("invalid class value in config. Allowed: [ham|spam]")
+    print(len(bodys))
     
     return ep, class_value, bodys
 
@@ -167,7 +172,7 @@ elif mode == "BUILD_NGRAMS":
     for i, b in tqdm(enumerate(bodys)):
         try:
             lemm = ep.preprocess(b, match_nltk_corpus=True)
-            e = ep.generate_N_grams(lemm, ngram=1)
+            e = ep.generate_N_grams(lemm, ngram=2)
             fb.fitToDict(e)
         except Exception as e:
             print(f"[{i}]: {e}") 
@@ -176,29 +181,22 @@ elif mode == "BUILD_NGRAMS":
             fb.saveDict()
             
     fb.saveDict()
+    fb.dumpSortedDict(file_out = f"{config['ngram_dict_outfile']}_sorted.txt")
 
 
-elif mode == "BUILD_FREQ_VEC":
+elif mode == "BUILD_FREQ_VEC_UNI":
     ep, class_value, bodys = initParser(config)
     fb_uni = FreqBuilder("uni_grams_dict_all_en.json")
-    #fb_bi  = FreqBuilder("bi_grams_dict_fin.json")
     uni_dict = fb_uni.getDict()
-    #bi_dict  = fb_bi.getDict()
     #fb.dumpSortedDict(file_out = "bi_grams_sorted.txt")
     #fb.dumpSortedDict(file_out = "uni_grams_sorted.txt")
     uni_vectors = []
-    bi_vectors = []
     for i, b in tqdm(enumerate(bodys)):
         try:
             lemm = ep.preprocess(b)
             vec_uni = ep.buildFreqVec(lemm, uni_dict)
-            #vec_bi = ep.buildFreqVec(lemm, bi_dict)
-
             vec_uni.append(class_value)
-            #vec_bi.append(class_value)
-
             uni_vectors.append(vec_uni)
-            #bi_vectors.append(vec_bi)
         except Exception as e:
             print(f"[{i}]: {e}") 
             continue
@@ -207,15 +205,30 @@ elif mode == "BUILD_FREQ_VEC":
        csvwriter = csv.writer(f)
        csvwriter.writerows(uni_vectors)
 
-    # with open('spam_freq_vec_bi.csv', 'a') as f:
-        # csvwriter = csv.writer(f)
-        # csvwriter.writerows(bi_vectors)
+elif mode == "BUILD_FREQ_VEC_BI":
+    ep, class_value, bodys = initParser(config)
+    fb_bi  = FreqBuilder("bi_grams_dict_fin.json")
+    bi_dict  = fb_bi.getDict()
+    bi_vectors = []
+    for i, b in tqdm(enumerate(bodys)):
+        try:
+            lemm = ep.preprocess(b)
+            vec_bi = ep.buildFreqVec(lemm, bi_dict)
+            vec_bi.append(class_value)
+            bi_vectors.append(vec_bi)
+        except Exception as e:
+            print(f"[{i}]: {e}") 
+            continue
+
+    with open('spam_freq_vec_bi.csv', 'a') as f:
+        csvwriter = csv.writer(f)
+        csvwriter.writerows(bi_vectors)
 
 
 #testing and debuging
 else:
-    fb = FreqBuilder("uni_grams_dict_all_en.json")
-    fb.dumpSortedDict(file_out = "uni_grams_dict_all_en_sorted.txt")
+    fb = FreqBuilder("bi_grams_dict_all_en.json")
+    fb.dumpSortedDict(file_out = "bi_grams_dict_all_en_sorted.txt")
 
 
     
