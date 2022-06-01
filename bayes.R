@@ -12,9 +12,18 @@ source(file="metrics.r")
 # BAYES 
 #---------------------------------------------
 
+model_bayes <- function(x_train_arg, y_train_arg, laplace_arg = 0){
+  gnb <- gaussian_naive_bayes(
+    x = data.matrix(x_train_arg),
+    y = y_train_arg,
+    laplace=laplace_arg
+  )
+  
+  
+}
 
 #train model
-gnb <- gaussian_naive_bayes(x = data.matrix(x_train), y = y_train)
+gnb <- gaussian_naive_bayes(x = data.matrix(x_train), y = y_train, laplace=1)
 summary(gnb)
 
 
