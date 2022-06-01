@@ -1,6 +1,7 @@
 library(randomForest)
 
 source(file="metrics.r")
+source(file="utils.r")
 
 model_forest <- function(x_train, y_train, ntree_arg, mtry_arg) {
   print(sprintf("ntree_arg: %s", ntree_arg))

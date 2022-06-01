@@ -2,6 +2,7 @@
 library(e1071)
 
 source(file="metrics.r")
+source(file="utils.r")
 
 #---------------------------------------------
 # SVM 
