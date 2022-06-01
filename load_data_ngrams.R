@@ -1,10 +1,10 @@
 library(caret)
 library(dplyr)
 #-----------unigrams
-spam_uni <- read.csv("spam_freq_vec_uni_en.csv", header=FALSE, encoding = "UTF-8")
+spam_uni <- read.csv("ngrams_vec/spam_freq_vec_uni_en.csv", header=FALSE, encoding = "UTF-8")
 names(spam_uni)[length(names(spam_uni))]<-"class" 
 
-ham_uni <- read.csv("ham_freq_vec_uni_en.csv", header=FALSE, encoding = "UTF-8")
+ham_uni <- read.csv("ngrams_vec/ham_freq_vec_uni_en.csv", header=FALSE, encoding = "UTF-8")
 names(ham_uni)[length(names(ham_uni))]<-"class" 
 
 
@@ -24,8 +24,13 @@ testing_n <- df_n[-intrain_n,]
 training_n %>%group_by(class) %>%summarise(n = n()) %>%mutate(Freq = n/sum(n))
 testing_n %>%group_by(class) %>%summarise(n = n()) %>%mutate(Freq = n/sum(n))
 
+  
 x_train = training_n[1:(length(training_n)-1)]
 y_train = training_n$class
 
 x_test = testing_n[1:(length(testing_n)-1)]
 y_test = testing_n$class
+
+x_all = df_n[1:(length(training_n)-1)]
+y_all = df_n$class
+
