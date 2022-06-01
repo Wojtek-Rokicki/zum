@@ -62,7 +62,8 @@ test_bayes <- function(dataset, iters_arg = 2, laplace_arg = 0){
   getROC(pr_prob_all, y_test_all)
 }
 
-test_bayes(data_embbedings, iters_arg = 10)
+test_bayes(data_embbedings, iters_arg = 15)
+test_bayes(data_ngrams, iters_arg = 15)
 
 
 ##train model
