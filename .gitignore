@@ -8,3 +8,10 @@ email_parser/encoder.py
 email_parser/text_preprocessing.py
 email_parser/parser_conf.json
 email_parser/test.py
+
+ngrams_dict/
+ngrams_vec/
+ngrams_dict_limited/
+ngrams_vec_limited/
+
+embeddings/

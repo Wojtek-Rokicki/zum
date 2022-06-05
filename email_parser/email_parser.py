@@ -25,7 +25,7 @@ class EmailParser(EmmailPreprocessing):
             # 'data/GoogleGoogleNews-vectors-negative300.bin', binary=True)
         self.use_spacy = use_spacy
         if self.use_spacy:
-            self.w2v_model = spacy.load('en_core_web_md')
+            self.w2v_model = spacy.load('en_core_web_md') # 685k keys, 20k unique vectors (300 dimensions)
         else:
             #self.w2v_model = KeyedVectors.load_word2vec_format(source_word_vec_file, binary=False)
             pass
@@ -133,7 +133,7 @@ def initParser(config):
 
 cwd = os.getcwd()
 print(cwd)
-with open("email_parser\parser_conf.json", "r", encoding="utf-8") as f:
+with open("email_parser/parser_conf.json", "r", encoding="utf-8") as f:
     config = json.loads(f.read())
 
 
@@ -172,7 +172,7 @@ elif mode == "BUILD_NGRAMS":
     for i, b in tqdm(enumerate(bodys)):
         try:
             lemm = ep.preprocess(b, match_nltk_corpus=True)
-            e = ep.generate_N_grams(lemm, ngram=2)
+            e = ep.generate_N_grams(lemm, ngram=2) # list of space separated ngrams
             fb.fitToDict(e)
         except Exception as e:
             print(f"[{i}]: {e}") 
@@ -186,7 +186,7 @@ elif mode == "BUILD_NGRAMS":
 
 elif mode == "BUILD_FREQ_VEC_UNI":
     ep, class_value, bodys = initParser(config)
-    fb_uni = FreqBuilder("uni_grams_dict_all_en.json")
+    fb_uni = FreqBuilder("ngrams_dict/uni_grams_dict_all_en.json")
     uni_dict = fb_uni.getDict()
     #fb.dumpSortedDict(file_out = "bi_grams_sorted.txt")
     #fb.dumpSortedDict(file_out = "uni_grams_sorted.txt")

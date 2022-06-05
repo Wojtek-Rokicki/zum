@@ -29,7 +29,6 @@ class FreqBuilder():
             f.write(json.dumps(new_dict))
             
             return new_dict
-    
                 
     def saveDict(self):
         tmp_filename = self.dict_filename + "_tmp"

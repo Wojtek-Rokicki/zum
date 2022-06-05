@@ -1,6 +1,7 @@
 library(caret)
 library(dplyr)
 #-----------unigrams
+
 spam_uni <- read.csv("ngrams_vec/spam_freq_vec_uni_en.csv", header=FALSE, encoding = "UTF-8")
 names(spam_uni)[length(names(spam_uni))]<-"class" 
 

@@ -53,10 +53,10 @@ class EmmailPreprocessing:
         words_tmp = [word for word in tokens if word.isalpha()]
         words = [x for x in words_tmp if x not in self.stopwords]
         
-        #finde POS tags for better lemmatization
+        #finde POS tags for better lemmatization, removes signs like , ( ) @ ...
         tagged = nltk.pos_tag(words)
 
-        #lemmatize
+        #lemmatize -> list of tuples
         lemms = [self.lemmatizer.lemmatize(word, pos=self.get_wordnet_pos(pos_tag)) 
                  for word, pos_tag in tagged]
 
