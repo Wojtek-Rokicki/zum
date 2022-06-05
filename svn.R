@@ -44,7 +44,7 @@ model_svm_prob <- function(x_train, y_train, kernel_arg, degree_arg=3, gamma_arg
 
 
 
-test_svm <- function(dataset, iters_arg = 2, kernel_arg, degree_arg=3, gamma_arg=1, cost_arg=1){
+test_svm <- function(dataset, iters_arg = 2, kernel_arg, degree_arg=3, gamma_arg=1, cost_arg=1, plot_sufix = ""){
   
   pr_prob_all = c()
   pr_class_all = c()
@@ -77,19 +77,25 @@ test_svm <- function(dataset, iters_arg = 2, kernel_arg, degree_arg=3, gamma_arg
   }
   
   
-  print(table(y_test_all, pr_class_all))
+  #print(table(y_test_all, pr_class_all))
   #metrics
   cm = as.matrix(table(y_test_all, pr_class_all))
-  calculateMetrics(cm)
+  r_m = calculateMetrics(cm)
   
   #ROC
-  getROC(pr_prob_all, y_test_all)
+  auc = getROC(pr_prob_all, y_test_all, file_sufix = plot_sufix)
+  
+  out_str = paste(r_m, auc, sep =";")
+  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv"))
+  writeLines(c(out_str), fileConn)
+  close(fileConn)
+  print("----------")
 }
 
 
 
-test_svm(data_embbedings, iters_arg = 2)
-test_svm(data_ngrams, iters_arg = 2)
+#test_svm(data_embbedings, iters_arg = 1)
+#test_svm(data_ngrams, iters_arg = 2)
 
 
 

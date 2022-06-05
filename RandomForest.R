@@ -19,7 +19,7 @@ model_forest <- function(x_train, y_train, ntree_arg, mtry_arg) {
 
 
 #mtry_arg - def. sqrt(p)
-test_forest <- function(dataset, mtry_arg, iters_arg = 2, ntree_arg = 50){
+test_forest <- function(dataset, mtry_arg, iters_arg = 2, ntree_arg = 50, plot_sufix = ""){
   
   pr_prob_all = c()
   pr_class_all = c()
@@ -50,13 +50,19 @@ test_forest <- function(dataset, mtry_arg, iters_arg = 2, ntree_arg = 50){
   }
   
   
-  print(table(y_test_all, pr_class_all))
+  #print(table(y_test_all, pr_class_all))
   #metrics
   cm = as.matrix(table(y_test_all, pr_class_all))
-  calculateMetrics(cm)
+  r_m = calculateMetrics(cm)
   
   #ROC
-  getROC(pr_prob_all, y_test_all)
+  auc = getROC(pr_prob_all, y_test_all, file_sufix = plot_sufix)
+  
+  out_str = paste(r_m, auc, sep =";")
+  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv"))
+  writeLines(c(out_str), fileConn)
+  close(fileConn)
+  print("----------")
 }
 
 test_forest(data_embbedings, mtry_arg=sqrt(300), iters_arg = 5, ntree_arg=200)

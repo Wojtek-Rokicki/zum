@@ -68,7 +68,9 @@ class EmailParser(EmmailPreprocessing):
     def buildFreqVec(self, lemms, ngram_dict):
         vec = []
         np_lemms = np.array(lemms)
-        for ngram in ngram_dict.keys():
+        sort = sorted(((v, k) for k,v in ngram_dict.items() if v >= 15), reverse=True)
+        #for ngram in ngram_dict.keys():
+        for _, ngram in sort:
             c = np.count_nonzero(np_lemms == ngram)
             vec.append(c)
             #vec.append(self.countNgram(lemms, ngram))
@@ -186,7 +188,7 @@ elif mode == "BUILD_NGRAMS":
 
 elif mode == "BUILD_FREQ_VEC_UNI":
     ep, class_value, bodys = initParser(config)
-    fb_uni = FreqBuilder("uni_grams_dict_all_en.json")
+    fb_uni = FreqBuilder("ngrams_dict\\uni_grams_dict_all_en.json")
     uni_dict = fb_uni.getDict()
     #fb.dumpSortedDict(file_out = "bi_grams_sorted.txt")
     #fb.dumpSortedDict(file_out = "uni_grams_sorted.txt")
@@ -201,7 +203,7 @@ elif mode == "BUILD_FREQ_VEC_UNI":
             print(f"[{i}]: {e}") 
             continue
 
-    with open('ham_freq_vec_uni_en.csv', 'a') as f:
+    with open('ngrams_vec\\ham_freq_vec_uni_en_15.csv', 'a') as f:
        csvwriter = csv.writer(f)
        csvwriter.writerows(uni_vectors)
 
@@ -227,10 +229,10 @@ elif mode == "BUILD_FREQ_VEC_BI":
 
 #testing and debuging
 else:
-    fb = FreqBuilder("bi_grams_dict_all_en.json")
-    fb.dumpSortedDict(file_out = "bi_grams_dict_all_en_sorted.txt")
+    fb = FreqBuilder("ngrams_dict\\uni_grams_dict_all_en.json")
+    fb.dumpSortedDict(file_out = "ngrams_dict\\uni_grams_dict_all_en_sorted2.txt")
 
-
+    
     
 
     

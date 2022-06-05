@@ -23,7 +23,7 @@ model_bayes <- function(x_train_arg, y_train_arg, laplace_arg = 0){
 }
 
 
-test_bayes <- function(dataset, iters_arg = 2, laplace_arg = 0){
+test_bayes <- function(dataset, iters_arg = 2, laplace_arg = 0, plot_sufix = ""){
   
   pr_prob_all = c()
   pr_class_all = c()
@@ -52,18 +52,24 @@ test_bayes <- function(dataset, iters_arg = 2, laplace_arg = 0){
     
   }
   
-  
-  print(table(y_test_all, pr_class_all))
+  print(plot_sufix)
+  #print(table(y_test_all, pr_class_all))
   #metrics
   cm = as.matrix(table(y_test_all, pr_class_all))
-  calculateMetrics(cm)
+  r_m = calculateMetrics(cm)
   
   #ROC
-  getROC(pr_prob_all, y_test_all)
+  auc = getROC(pr_prob_all, y_test_all, file_sufix = plot_sufix)
+  
+  out_str = paste(r_m, auc, sep =";")
+  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv"))
+  writeLines(c(out_str), fileConn)
+  close(fileConn)
+  print("----------")
 }
 
-test_bayes(data_embbedings, iters_arg = 15)
-test_bayes(data_ngrams, iters_arg = 15)
+#test_bayes(data_embbedings, iters_arg = 1,plot_sufix="test")
+#test_bayes(data_ngrams, iters_arg = 15)
 
 
 ##train model

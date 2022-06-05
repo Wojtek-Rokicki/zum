@@ -42,9 +42,11 @@ class FreqBuilder():
 
     def dumpSortedDict(self, file_out):
         with open(file_out, "w", encoding='utf-8') as f:
-            sort = sorted( ((v,k) for k,v in self.__ngrams_dict.items()), reverse=True)
+            cnt = len(self.__ngrams_dict)
+            sort = sorted( ((round(v/cnt, 4) ,v,k) for k,v in self.__ngrams_dict.items()), reverse=True)
             for s in sort:
                 f.write(f"{s}\n")
+                
                 
     def getDict(self):
         return self.__ngrams_dict

@@ -24,19 +24,34 @@ calculateMetrics <-function(cm){
   p = rowsums / n # distribution of instances over the actual classes
   q = colsums / n # distribution of instances over the predicted classes
   
+  print(cm)
+  TP = cm[2,2] #TP
+  TN = cm[1,1] #TN
+  FP = cm[1,2] #FP
+  FN = cm[2,1] #FN
   accuracy = round((sum(diag) / n ), digits =2)
   precision = round((diag / colsums ), digits =2)
   recall = round((diag / rowsums), digits =2)
+  
+  p_ham = unname(precision)[1]
+  p_spam = unname(precision)[2]
+  
+  r_ham = unname(recall)[1]
+  r_spam = unname(recall)[2]
+  
   print("accuracy: ")
   print(accuracy)
   print("precision :")
   print(precision)
   print("recall: ")
   print(recall)
+  
+  m_ret =paste(TP,TN,FP,FN,p_spam, p_ham,r_spam, r_ham, accuracy, sep = ";")
+  return(m_ret)
 }
 
 #ROC
-getROC <-function(pr_probs, labels){
+getROC <-function(pr_probs, labels, file_sufix = ""){
   #pr_prob_tmp <- as.data.frame(probs) 
   #pr_prob = pr_prob_tmp$spam
   
@@ -45,13 +60,20 @@ getROC <-function(pr_probs, labels){
   
   pred <- prediction(pr_probs, labels)
   perf <- performance(pred, "tpr", "fpr")
+  
+  # 1. Open jpeg file
+  jpeg(paste("plots/roc_plot_", file_sufix, '.jpg'), width = 850, height = 850)
+  # 3. Close the file
   plot(perf,lwd= 4)
+  dev.off()
   
   auc <- performance(pred, measure = "auc")
   auc <- auc@y.values[[1]]
+  auc <- round(auc, digits = 3)
   print("AUC:")
   print(auc)
   
+  return(auc)
 }
 
 
