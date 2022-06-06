@@ -60,14 +60,14 @@ test_forest <- function(dataset, mtry_arg, iters_arg = 2, ntree_arg = 50, plot_s
   auc = getROC(pr_prob_all, y_test_all, file_sufix = plot_sufix)
   
   out_str = paste(r_m, auc, sep =";")
-  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv"))
+  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv", sep=""))
   writeLines(c(out_str), fileConn)
   close(fileConn)
   print("----------")
 }
 
-test_forest(data_embbedings, mtry_arg=sqrt(300), iters_arg = 5, ntree_arg=200)
-test_forest(data_ngrams, mtry_arg=sqrt(15454) , iters_arg = 5)
+#test_forest(data_embbedings, mtry_arg=sqrt(300), iters_arg = 5, ntree_arg=200)
+#test_forest(data_ngrams, mtry_arg=sqrt(15454) , iters_arg = 5)
 
 
 #---------------------------------------------

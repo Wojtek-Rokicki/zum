@@ -71,6 +71,30 @@ for(k in list("radial", "sigmoid")){
   }
 }
 
+ntrees = list(50, 200, 500)
+
+f1 <- function(x){return(sqrt(length(x))/2)}
+f2 <- function(x){return(sqrt(length(x)))}
+f3 <- function(x){return(sqrt(length(x))*sqrt(length(x))/2)}
+
+nattributes_factors = list(f1, f2, f3)
+
+for(nt in ntrees){
+  for(f in nattributes_factors){
+    test_forest(data_15_max,  mtry_arg = f(length(data_15_max)-1),   iters_arg = ITERS_CNT, ntree_arg = nt, plot_sufix = paste('forest_data_15_max' , "_", nt, "nt_", f(length(data_15_max)-1), "natr_", sep=""))
+    test_forest(data_49_max,  mtry_arg = f(length(data_49_max)-1),   iters_arg = ITERS_CNT, ntree_arg = nt, plot_sufix = paste('forest_data_49_max' , "_", nt, "nt_", f(length(data_49_max)-1), "natr_", sep=""))
+    test_forest(data_122_max, mtry_arg = f(length(data_122_max)-1), iters_arg = ITERS_CNT, ntree_arg = nt,  plot_sufix = paste('forest_data_122_max', "_", nt, "nt_", f(length(data_122_max)-1), "natr_", sep=""))
+    test_forest(data_251_max, mtry_arg = f(length(data_251_max)-1), iters_arg = ITERS_CNT, ntree_arg = nt,  plot_sufix = paste('forest_data_251_max', "_", nt, "nt_", f(length(data_251_max)-1), "natr_", sep=""))
+    test_forest(data_15_251,  mtry_arg = f(length(data_15_251)-1),   iters_arg = ITERS_CNT, ntree_arg = nt, plot_sufix = paste('forest_data_15_251' , "_", nt, "nt_", f(length(data_15_251)-1), "natr_", sep=""))
+    test_forest(data_15_122,  mtry_arg = f(length(data_15_122)-1),   iters_arg = ITERS_CNT, ntree_arg = nt, plot_sufix = paste('forest_data_15_122' , "_", nt, "nt_", f(length(data_15_122)-1), "natr_", sep=""))
+    test_forest(data_49_251,  mtry_arg = f(length(data_49_251)-1),   iters_arg = ITERS_CNT, ntree_arg = nt, plot_sufix = paste('forest_data_49_251' , "_", nt, "nt_", f(length(data_49_251)-1), "natr_", sep=""))
+    
+    test_forest(data_embbedings, mtry_arg = f(length(data_49_251)-1),   iters_arg = ITERS_CNT, ntree_arg = nt, plot_sufix = 'forest_embb')
+  }
+}
+
+
+
 
 
 

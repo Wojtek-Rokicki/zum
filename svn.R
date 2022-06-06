@@ -87,7 +87,7 @@ test_svm <- function(dataset, iters_arg = 2, kernel_arg, degree_arg=3, gamma_arg
   auc = getROC(pr_prob_all, y_test_all, file_sufix = plot_sufix)
   
   out_str = paste(r_m, auc, sep =";")
-  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv"))
+  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv", sep=""))
   writeLines(c(out_str), fileConn)
   close(fileConn)
   print("----------")
