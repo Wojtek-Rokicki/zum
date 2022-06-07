@@ -2,7 +2,8 @@
 source(file="bayes.R")
 source(file="svn.R")
 source(file="RandomForest.R")
-
+source(file="load_data_ngrams.R")
+source(file="load_datasets.R")
 
 
 
@@ -23,6 +24,7 @@ data_49_251  = cbind(data_ngrams_15[499:2010], class)
 
 ITERS_CNT = 15
 
+#bayes 
 
 test_bayes(data_15_max,  iters_arg = ITERS_CNT, plot_sufix = 'bayes_data_15_max')
 test_bayes(data_49_max,  iters_arg = ITERS_CNT, plot_sufix = 'bayes_data_49_max')
@@ -35,6 +37,8 @@ test_bayes(data_49_251,  iters_arg = ITERS_CNT, plot_sufix = 'bayes_data_49_251'
 
 test_bayes(data_embbedings,  iters_arg = ITERS_CNT, plot_sufix = 'bayes_embb')
 
+
+#SVM
 
 kernels = list("linear", "radial", "sigmoid")
 costs = list(0.01, 0.1, 1, 10) # (all)
@@ -97,9 +101,7 @@ for(nt in ntrees){
 
 
 
-
-
-
+#Random Forest
 
 ntrees = list(50)
 
@@ -109,7 +111,7 @@ f3 <- function(x){return(sqrt(length(x)-1)*sqrt(length(x))/2)}
 
 nattributes_factors = list(f1, f2, f3)
 
-ITERS_CNT = 10
+
 
 for(nt in ntrees){
   for(f in nattributes_factors){
@@ -124,12 +126,6 @@ for(nt in ntrees){
     #test_forest(data_embbedings, mtry_arg = f(data_embbedings),   iters_arg = ITERS_CNT, ntree_arg = nt, plot_sufix = paste('forest_embb' , "_", nt, "nt_", f(data_embbedings), "natr_", sep=""))
   }
 }
-
-
-
-test_forest(data_49_max,  mtry_arg = f2(data_49_max),   iters_arg = 1, ntree_arg = 100, plot_sufix = paste('forest_data_49_max' , "_", nt, "nt_", f(data_49_max), "natr_", sep=""))
-test_forest(data_49_max,  mtry_arg = f2(data_49_max),   iters_arg = 1, ntree_arg = 100, plot_sufix = paste('forest_data_49_max' , "_", nt, "nt_", f(data_49_max), "natr_", sep=""), parr = TRUE)
-
 
 
 
