@@ -3,8 +3,8 @@ Spam filter - text classification algorithms - analysis
 
 
 --Budowanie zbiorów--<br>
-Katalog email_parser zawiera skrypty w języku python wykorzystywane do budowy reprezentacji ngramowej oraz w emmbedingow<br>
-W celu wygenerowania zbioru należy wykorzystać plik email_pareser.py w otpowiednim trybie wyszególnionym w kodzie.<br>
+email_parser  - Katalog zawierający skrypty w języku python wykorzystywane do budowy reprezentacji ngramowej oraz w emmbedingow<br>
+W celu wygenerowania zbioru należy wykorzystać plik email_pareser.py w odpowiednim trybie wyszególnionym w kodzie.<br>
 
 -- Badanie modeli i reprezentacji --<br>
 load_dataset.R - wczytanie zbioru z reprezentacją emmbedingową<br>
