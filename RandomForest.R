@@ -1,10 +1,39 @@
 library(randomForest)
+library (doParallel)
 
 source(file="metrics.r")
 source(file="utils.r")
 
+model_forest_parallel <- function(x_train, y_train, ntree_arg, mtry_arg) {
+  print(sprintf("[parr] ntree_arg: %s", ntree_arg))
+  
+  cl<-makePSOCKcluster(5)
+  
+  registerDoParallel(cl)
+  start.time<-proc.time()
+  model_rf <- randomForest(
+    x_train,
+    factor(y_train), 
+    importance=TRUE, 
+    proximity=TRUE,
+    ntree=ntree_arg,
+    mtry=mtry_arg
+  ) 
+
+  stop.time<-proc.time()
+  
+  run.time<-stop.time -start.time
+  
+  print(run.time)
+  
+  stopCluster(cl)
+  
+  return(model_rf)
+}
+
 model_forest <- function(x_train, y_train, ntree_arg, mtry_arg) {
   print(sprintf("ntree_arg: %s", ntree_arg))
+  start.time<-proc.time()
   
   model_rf <- randomForest(
     x_train,
@@ -15,12 +44,16 @@ model_forest <- function(x_train, y_train, ntree_arg, mtry_arg) {
     mtry=mtry_arg
   ) 
 
+  stop.time<-proc.time()
+  run.time<-stop.time -start.time
+  print(run.time)
+  
   return(model_rf)
 }
 
 
 #mtry_arg - def. sqrt(p)
-test_forest <- function(dataset, mtry_arg, iters_arg = 2, ntree_arg = 50, plot_sufix = ""){
+test_forest <- function(dataset, mtry_arg, iters_arg = 2, ntree_arg = 50, plot_sufix = "", parr = FALSE){
   
   pr_prob_all = c()
   pr_class_all = c()
@@ -36,7 +69,9 @@ test_forest <- function(dataset, mtry_arg, iters_arg = 2, ntree_arg = 50, plot_s
     y_train = d_sets[[3]]
     y_test = d_sets[[4]]
     
-    rfm = model_forest(x_train, y_train, ntree_arg, mtry_arg)
+    if(parr == FALSE) rfm = model_forest(x_train, y_train, ntree_arg, mtry_arg)
+    else rfm = model_forest_parallel(x_train, y_train, ntree_arg, mtry_arg)
+    
     
     pr_class = predict(rfm, newdata=x_test, type="response")
     pr_prob = predict(rfm, newdata=x_test, type="prob")
@@ -66,8 +101,8 @@ test_forest <- function(dataset, mtry_arg, iters_arg = 2, ntree_arg = 50, plot_s
   print("----------")
 }
 
-test_forest(data_embbedings, mtry_arg=sqrt(300), iters_arg = 5, ntree_arg=200)
-test_forest(data_ngrams, mtry_arg=sqrt(15454) , iters_arg = 5)
+#test_forest(data_embbedings, mtry_arg=sqrt(300), iters_arg = 1, ntree_arg=200)
+#test_forest(data_ngrams, mtry_arg=sqrt(15454) , iters_arg = 5)
 
 
 #---------------------------------------------
