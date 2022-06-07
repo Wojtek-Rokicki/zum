@@ -44,30 +44,30 @@ gammas = list(0.01, 0.1, 1, 10) # (radial, sigmoid)
 
 #cost param
 for(k in kernels){
-  for(c in cost){
-    test_svm(data_15_max,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = 'svm_data_15_max')
-    test_svm(data_49_max,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = 'svm_data_49_max')
-    test_svm(data_122_max, iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = 'svm_data_122_max')
-    test_svm(data_251_max, iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = 'svm_data_251_max')
-    test_svm(data_15_251,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = 'svm_data_15_251')
-    test_svm(data_15_122,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = 'svm_data_15_122')
-    test_svm(data_49_251,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = 'svm_data_49_251')
+  for(c in costs){
+    test_svm(data_15_max,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = paste('svm_data_15_max_', k, "_c_", c ))
+    test_svm(data_49_max,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = paste('svm_data_49_max_', k, "_c_", c ))
+    test_svm(data_122_max, iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = paste('svm_data_122_max_', k, "_c_", c))
+    test_svm(data_251_max, iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = paste('svm_data_251_max_', k, "_c_", c))
+    test_svm(data_15_251,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = paste('svm_data_15_251_', k, "_c_", c ))
+    test_svm(data_15_122,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = paste('svm_data_15_122_', k, "_c_", c ))
+    test_svm(data_49_251,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = paste('svm_data_49_251_', k, "_c_", c ))
     
-    test_svm(data_embbedings,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = 'svm_embb')
+    test_svm(data_embbedings,  iters_arg = ITERS_CNT, kernel_arg = k, cost_arg= c, plot_sufix = paste('svm_embb_', k, "_c_", c ))
   }
 }
 
 for(k in list("radial", "sigmoid")){
   for(g in gammas){
-    test_svm(data_15_max,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = 'svm_data_15_max')
-    test_svm(data_49_max,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = 'svm_data_49_max')
-    test_svm(data_122_max, iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = 'svm_data_122_max')
-    test_svm(data_251_max, iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = 'svm_data_251_max')
-    test_svm(data_15_251,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = 'svm_data_15_251')
-    test_svm(data_15_122,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = 'svm_data_15_122')
-    test_svm(data_49_251,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = 'svm_data_49_251')
+    test_svm(data_15_max,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = paste('svm_data_15_max_',  k, "_g_", g ))
+    test_svm(data_49_max,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = paste('svm_data_49_max_',  k, "_g_", g ))
+    test_svm(data_122_max, iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = paste('svm_data_122_max_', k, "_g_", g))
+    test_svm(data_251_max, iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = paste('svm_data_251_max_', k, "_g_", g))
+    test_svm(data_15_251,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = paste('svm_data_15_251_',  k, "_g_", g ))
+    test_svm(data_15_122,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = paste('svm_data_15_122_',  k, "_g_", g ))
+    test_svm(data_49_251,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = paste('svm_data_49_251_',  k, "_g_", g ))
     
-    test_svm(data_embbedings,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = 'svm_embb')
+    test_svm(data_embbedings,  iters_arg = ITERS_CNT, kernel_arg = k, gamma_arg= g, plot_sufix = paste('svm_embb_', k, "_g_", g ))
   }
 }
 
