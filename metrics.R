@@ -62,7 +62,7 @@ getROC <-function(pr_probs, labels, file_sufix = ""){
   perf <- performance(pred, "tpr", "fpr")
   
   # 1. Open jpeg file
-  jpeg(paste("plots/roc_plot_", file_sufix, '.jpg', sep = ""), width = 850, height = 850)
+  jpeg(paste("plots/roc_plot_", file_sufix, '.jpg', sep=""), width = 850, height = 850)
   # 3. Close the file
   plot(perf,lwd= 4)
   dev.off()
