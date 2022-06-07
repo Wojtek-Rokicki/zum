@@ -1,6 +1,4 @@
 library(randomForest)
-library(doParallel)
-library(snow)
 
 source(file="metrics.r")
 source(file="utils.r")
@@ -17,25 +15,6 @@ model_forest <- function(x_train, y_train, ntree_arg, mtry_arg) {
     mtry=mtry_arg
   ) 
 
-  return(model_rf)
-}
-
-
-model_forest_parr <- function(x_train, y_train, ntree_arg, mtry_arg) {
-  print(sprintf("ntree_arg: %s", ntree_arg))
-  s = round(mtry_arg / 20)
-  workers = makeCluster(8, type="SOCK")
-  registerDoParallel(workers)
-  
-  model_rf <- randomForest(
-    x_train,
-    factor(y_train), 
-    importance=TRUE, 
-    proximity=TRUE,
-    ntree=ntree_arg,
-    mtry=mtry_arg
-  ) 
-  
   return(model_rf)
 }
 
@@ -81,12 +60,11 @@ test_forest <- function(dataset, mtry_arg, iters_arg = 2, ntree_arg = 50, plot_s
   auc = getROC(pr_prob_all, y_test_all, file_sufix = plot_sufix)
   
   out_str = paste(r_m, auc, sep =";")
-  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv"))
+  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv", sep=""))
   writeLines(c(out_str), fileConn)
   close(fileConn)
   print("----------")
 }
-
 
 #test_forest(data_embbedings, mtry_arg=sqrt(300), iters_arg = 5, ntree_arg=200)
 #test_forest(data_ngrams, mtry_arg=sqrt(15454) , iters_arg = 5)

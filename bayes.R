@@ -62,7 +62,7 @@ test_bayes <- function(dataset, iters_arg = 2, laplace_arg = 0, plot_sufix = "")
   auc = getROC(pr_prob_all, y_test_all, file_sufix = plot_sufix)
   
   out_str = paste(r_m, auc, sep =";")
-  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv"))
+  fileConn<-file(paste("metrics/metrics_", plot_sufix , ".csv", sep=""))
   writeLines(c(out_str), fileConn)
   close(fileConn)
   print("----------")
